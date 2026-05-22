@@ -1,0 +1,179 @@
+/* ── Proof Layer — "Four Frames" ───────────────────────────────────────────
+   The section lives inside the page's fixed overlay (position:fixed).
+   .stage fills the allocated absolutely-positioned container completely.
+   No 400vh wrapper needed — scroll progress is passed as a prop from page.tsx.
+─────────────────────────────────────────────────────────────────────────── */
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Each beat is absolutely stacked; only the active one is visible.
+   Cross-fade + translate gives the filmic feel. */
+.beat {
+  position: absolute;
+  inset: 12vh 8vw;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: clamp(24px, 4vh, 56px);
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 600ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+.beat[data-active="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ── Typography ─────────────────────────────────────────────────────────── */
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.headline {
+  align-self: end;
+  font-family: var(--font-mono);
+  font-size: clamp(16px, 1.4vw, 20px);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: lowercase;
+  margin: 0;
+}
+
+/* Hero number — the only visualization */
+.hero {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-size: clamp(96px, 18vw, 320px);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+  color: #fff;
+  display: flex;
+  align-items: baseline;
+  gap: 0.05em;
+  transition: color 240ms ease;
+}
+.hero[data-locked="true"] {
+  color: var(--brand);
+}
+.heroUnit {
+  font-size: 0.28em;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0;
+  transition: color 240ms ease;
+}
+.hero[data-locked="true"] .heroUnit {
+  color: color-mix(in srgb, var(--brand) 70%, transparent);
+}
+
+.support {
+  max-width: 56ch;
+  font-size: clamp(15px, 1.1vw, 18px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
+.support::before {
+  content: "─ ";
+  color: var(--brand);
+  margin-right: 0.4em;
+}
+
+.source {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  margin: 1.2em 0 0;
+}
+
+/* ── Bridge — visible on the last beat ─────────────────────────────────── */
+.bridge {
+  position: absolute;
+  inset: auto 8vw 8vh 8vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  opacity: 0;
+  transition: opacity 500ms ease;
+  pointer-events: none;
+}
+.bridge[aria-hidden="false"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+.bridgeText {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1vw, 16px);
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+.cta {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--brand);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--brand) 40%, transparent);
+  padding-bottom: 2px;
+  transition: border-color 150ms ease;
+}
+.cta:hover {
+  border-color: var(--brand);
+}
+.cta:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 4px;
+}
+
+/* ── Progress rail ──────────────────────────────────────────────────────── */
+.rail {
+  position: absolute;
+  top: 50%;
+  right: 28px;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 14px;
+}
+.railDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  transition:
+    background 300ms ease,
+    transform 300ms ease;
+}
+.railDot[data-on="true"] {
+  background: var(--brand);
+  transform: scale(1.35);
+  box-shadow: 0 0 8px var(--brand);
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .beat {
+    transition: opacity 200ms linear;
+    transform: none !important;
+  }
+}

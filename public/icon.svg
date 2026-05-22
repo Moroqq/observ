@@ -1,0 +1,10 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="180" height="180" rx="40" fill="black"/>
+  <!-- O: white rounded rect with black inner cutout -->
+  <rect x="14" y="38" width="66" height="104" rx="18" fill="white"/>
+  <rect x="29" y="54" width="36" height="72" rx="10" fill="black"/>
+  <!-- V: two vertical blocks joined at base -->
+  <rect x="96" y="38" width="27" height="70" rx="13" fill="white"/>
+  <rect x="133" y="38" width="27" height="70" rx="13" fill="white"/>
+  <rect x="96" y="108" width="64" height="34" rx="13" fill="white"/>
+</svg>
