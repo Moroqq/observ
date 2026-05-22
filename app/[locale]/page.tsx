@@ -52,7 +52,7 @@ export default function Home() {
   const [scrollY,      setScrollY]      = useState(0)
   const [rowHeight,    setRowHeight]    = useState(0)
   const [a2Height,     setA2Height]     = useState(0)
-  const [hoveredCard,  setHoveredCard]  = useState<string | null>(null)
+  const [engagedCard,  setEngagedCard]  = useState<string | null>(null)
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const rowRef   = useRef<HTMLDivElement>(null)
@@ -63,6 +63,18 @@ export default function Home() {
     window.addEventListener("scroll", fn, { passive: true })
     return () => window.removeEventListener("scroll", fn)
   }, [])
+
+  // Click outside any card → disengage
+  useEffect(() => {
+    if (!engagedCard) return
+    const handler = (e: MouseEvent) => {
+      const cardEl = document.querySelector(`[data-card-id="${engagedCard}"]`)
+      if (cardEl && cardEl.contains(e.target as Node)) return
+      setEngagedCard(null)
+    }
+    const id = window.setTimeout(() => document.addEventListener("click", handler), 50)
+    return () => { window.clearTimeout(id); document.removeEventListener("click", handler) }
+  }, [engagedCard])
 
   useEffect(() => {
     if (!rowRef.current) return
@@ -162,6 +174,19 @@ export default function Home() {
       {/* ── Fixed viewport ─────────────────────────────────────────────── */}
       <div className="fixed inset-0 top-[88px] bg-black" style={{ overflow: "visible" }}>
 
+        {/* Engagement backdrop — dims the scene, click to dismiss */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 2,
+            background: "rgba(0,0,0,0.55)",
+            opacity: engagedCard !== null ? 1 : 0,
+            pointerEvents: engagedCard !== null ? "auto" : "none",
+            transition: "opacity 380ms ease",
+          }}
+        />
+
         <div
           style={{
             position: "absolute",
@@ -169,6 +194,7 @@ export default function Home() {
             left: "50%",
             transform: "translate(-50%, -50%)",
             opacity: 1 - cardsOut,
+            zIndex: 3,
           }}
         >
           <div ref={rowRef} style={{ display: "flex", alignItems: "center", gap: ROW_GAP }}>
@@ -188,8 +214,8 @@ export default function Home() {
                 framePath="/frameswebsite/websiteobrez_frame_"
                 totalFrames={101}
                 cardId="A1"
-                hoveredCardId={hoveredCard}
-                onHoverChange={setHoveredCard}
+                engagedCardId={engagedCard}
+                onEngageChange={setEngagedCard}
               />
             </div>
 
@@ -200,8 +226,8 @@ export default function Home() {
                 position: "relative", zIndex: 2,
                 transform: `translateY(${logoTranslateY}px)`,
                 willChange: "transform",
-                opacity: hoveredCard !== null ? 0.2 : 1,
-                filter: hoveredCard !== null ? "blur(3px)" : "none",
+                opacity: engagedCard !== null ? 0.2 : 1,
+                filter: engagedCard !== null ? "blur(3px)" : "none",
                 transition: "opacity 360ms ease, filter 360ms ease",
               }}
             >
@@ -237,8 +263,8 @@ export default function Home() {
                 framePath="/framesapp/prilozhenieobrez_frame_"
                 totalFrames={103}
                 cardId="A3"
-                hoveredCardId={hoveredCard}
-                onHoverChange={setHoveredCard}
+                engagedCardId={engagedCard}
+                onEngageChange={setEngagedCard}
               />
             </div>
           </div>
@@ -260,8 +286,8 @@ export default function Home() {
                 framePath="/framesdesign/designobrez_frame_"
                 totalFrames={151}
                 cardId="A2"
-                hoveredCardId={hoveredCard}
-                onHoverChange={setHoveredCard}
+                engagedCardId={engagedCard}
+                onEngageChange={setEngagedCard}
               />
             </div>
           </div>

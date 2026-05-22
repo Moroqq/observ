@@ -13,7 +13,7 @@ export interface Service {
 // Budget × (weight / Σweights) = per-service allocation; total ≡ budget (±rounding).
 // Scope adapts to budget, not the other way around. Lite / Standard / Extended tier is
 // surfaced to the user so the price-vs-scope relationship reads as honest, not magical.
-// Floor: slider min = 15k. No per-service floor — accepted risk of the strategy.
+// Floor: slider min = 5k. No per-service floor — accepted risk of the strategy.
 export const SERVICES: Service[] = [
   // development
   { id: "landing",      category: "development", label: "лендинг",              weight:  32, baseWeeks: [2, 3]  },
@@ -29,7 +29,7 @@ export const SERVICES: Service[] = [
   { id: "video",        category: "branding",    label: "видео",                weight:  32, baseWeeks: [2, 4]  },
 ]
 
-export const BUDGET_MIN     = 15_000
+export const BUDGET_MIN     = 5_000
 export const BUDGET_MAX     = 2_000_000
 export const BUDGET_STEP    = 1_000
 export const RUSH_MULT      = 1.30

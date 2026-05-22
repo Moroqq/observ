@@ -55,7 +55,7 @@ function useSmoothNumber(target: number, duration = 250): number {
 
 // ── BudgetSlider ─────────────────────────────────────────────────────────────
 const TICKS = [
-  { val: 15_000,    label: "15к"  },
+  { val: 5_000,     label: "5к"   },
   { val: 100_000,   label: "100к" },
   { val: 500_000,   label: "500к" },
   { val: 1_000_000, label: "1млн" },
@@ -189,7 +189,7 @@ function ServiceCard({
             transition: "color 150ms ease",
           }}
         >
-          {new Intl.NumberFormat("ru-RU").format(smooth)} ₽
+          {new Intl.NumberFormat("ru-RU").format(Math.max(1_000, Math.round(smooth / 1_000) * 1_000))} ₽
         </div>
 
         <div
@@ -319,21 +319,21 @@ export function EstimateModule({ locale = "ru" }: { locale?: "ru" | "en" }) {
 
       {/* Terminal frame */}
       <div
-        className="border-2"
         style={{
-          borderColor: "rgba(0,255,106,0.75)",
-          boxShadow: "0 0 0 1px rgba(0,255,106,.12), 0 0 40px rgba(0,255,106,.18)",
+          position: "relative",
+          background: "rgba(0, 8, 4, 0.4)",
+          border: "2px solid rgba(0, 255, 106, 0.55)",
+          borderRadius: 6,
+          boxShadow: "0 0 0 1px rgba(0,255,106,0.10) inset, 0 0 40px rgba(0,255,106,0.10)",
+          padding: "clamp(28px, 3vw, 56px)",
         }}
       >
-        {/* Top bar */}
-        <div
-          className="border-b-2 px-5 py-2.5 text-green-400/70 text-[11px]"
-          style={{ borderColor: "rgba(0,255,106,0.4)" }}
-        >
+        {/* Command label */}
+        <div className="text-green-400/70 text-[11px] mb-8">
           {t("calculator.commandLine")}
         </div>
 
-        <div className="space-y-10" style={{ padding: "clamp(32px,4vw,56px)" }}>
+        <div className="space-y-10">
 
           {/* 1 — Budget slider */}
           <BudgetSlider value={budget} onChange={setBudget} />

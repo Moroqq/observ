@@ -12,8 +12,8 @@ interface ServiceCardProps {
   framePath: string
   totalFrames: number
   cardId: string
-  hoveredCardId: string | null
-  onHoverChange: (id: string | null) => void
+  engagedCardId: string | null
+  onEngageChange: (id: string | null) => void
 }
 
 export function ServiceCard({
@@ -24,8 +24,8 @@ export function ServiceCard({
   framePath,
   totalFrames,
   cardId,
-  hoveredCardId,
-  onHoverChange,
+  engagedCardId,
+  onEngageChange,
 }: ServiceCardProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -55,20 +55,42 @@ export function ServiceCard({
     }
   }, [index, ready, imagesRef])
 
-  const isHovered      = hoveredCardId === cardId
-  const isOtherHovered = hoveredCardId !== null && hoveredCardId !== cardId
+  const isEngaged      = engagedCardId === cardId
+  const isOtherEngaged = engagedCardId !== null && engagedCardId !== cardId
+
+  // When frames finish loading and card is already engaged — start animation
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { if (ready && isEngaged) enter() }, [ready])
+
+  // When card is disengaged — reverse animation back to frame 0
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!isEngaged) leave() }, [isEngaged])
 
   return (
     <div
       role="button"
       tabIndex={0}
+      aria-pressed={isEngaged}
+      data-card-id={cardId}
       className={`${styles.card} ${className}`}
-      data-hovered={String(isHovered)}
-      data-other-hovered={String(isOtherHovered)}
-      onMouseEnter={() => { onHoverChange(cardId); enter() }}
-      onMouseLeave={() => { onHoverChange(null);   leave() }}
-      onFocus={() => { onHoverChange(cardId); enter() }}
-      onBlur={() => { onHoverChange(null);   leave() }}
+      data-engaged={String(isEngaged)}
+      data-other-engaged={String(isOtherEngaged)}
+      onClick={() => {
+        if (!isEngaged) {
+          onEngageChange(cardId)
+          enter()
+        }
+      }}
+      onKeyDown={(e) => {
+        if ((e.key === "Enter" || e.key === " ") && !isEngaged) {
+          e.preventDefault()
+          onEngageChange(cardId)
+          enter()
+        }
+        if (e.key === "Escape" && isEngaged) {
+          onEngageChange(null)
+        }
+      }}
     >
       {/* Preview */}
       <div className={styles.frames}>
