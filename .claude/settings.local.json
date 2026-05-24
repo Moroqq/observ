@@ -5,7 +5,8 @@
       "PowerShell(node --version)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "PowerShell(Get-Process -Name node -ErrorAction SilentlyContinue)",
-      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:3002\" -UseBasicParsing -TimeoutSec 3; \"UP: $\\($r.StatusCode\\)\" } catch { \"DOWN: $_\" })"
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:3002\" -UseBasicParsing -TimeoutSec 3; \"UP: $\\($r.StatusCode\\)\" } catch { \"DOWN: $_\" })",
+      "PowerShell(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\every\\\\observ-main\\\\app\\\\api\\\\telegram\\\\webhook\")"
     ]
   }
 }
