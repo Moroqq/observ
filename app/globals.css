@@ -1,6 +1,14 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@font-face {
+  font-family: 'Luga';
+  src: url('/fonts/Luga.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -243,5 +251,13 @@
   .budget-slider::-webkit-slider-thumb {
     transition: none;
   }
+}
+
+/* ── Russian locale font ────────────────────────────────────────────────── */
+[data-locale="ru"] .font-mono,
+[data-locale="ru"] .font-sans,
+[data-locale="ru"] * {
+  --font-mono: 'Luga', monospace;
+  font-family: 'Luga', monospace;
 }
 
