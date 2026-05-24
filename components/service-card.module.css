@@ -1,0 +1,139 @@
+/* ── Service card ─────────────────────────────────────────────────────────── */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(12, 12, 12, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  /* explicit defaults so transitions have a defined start value */
+  transform: scale(1);
+  filter: none;
+  transition:
+    transform      380ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter         380ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity        380ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow     380ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color   380ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  isolation: isolate;
+}
+
+/* ── Hovered card ─────────────────────────────────────────────────────────── */
+.card:hover,
+.card[data-hovered="true"] {
+  transform: scale(1.04);
+  z-index: 10;
+  border-color: rgba(0, 255, 106, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 106, 0.18) inset,
+    0 12px 40px rgba(0, 255, 106, 0.12),
+    0 0 64px rgba(0, 255, 106, 0.08),
+    0 20px 60px rgba(0, 0, 0, 0.9);
+}
+
+/* ── Other cards — frosted, dimmed ─────────────────────────────────────────── */
+.card[data-other-hovered="true"] {
+  transform: scale(0.98);
+  filter: blur(8px) brightness(0.55) saturate(0.7);
+  opacity: 0.7;
+}
+
+/* ── Keyboard focus ──────────────────────────────────────────────────────── */
+.card:focus-visible {
+  outline: 2px solid rgba(0, 255, 106, 0.7);
+  outline-offset: 3px;
+}
+
+/* ── Frame container ─────────────────────────────────────────────────────── */
+.frames {
+  position: relative;
+  width: calc(100% - 10px);
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #050505;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #0a0a0a, #050505);
+}
+
+/* ── Text area ───────────────────────────────────────────────────────────── */
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(20px, 2.5vw, 32px);
+  flex: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  pointer-events: none;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.40);
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: clamp(15px, 1.5vw, 22px);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #ffffff;
+  margin: 0;
+}
+
+.body {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.1vw, 15px);
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+}
+
+/* ── Mobile — disable hover effects ─────────────────────────────────────── */
+@media (max-width: 900px) {
+  .card[data-other-hovered="true"] {
+    filter: none;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: opacity 200ms linear;
+  }
+  .card[data-hovered="true"] {
+    transform: none;
+    box-shadow: 0 0 0 1px rgba(0, 255, 106, 0.45) inset;
+  }
+  .card[data-other-hovered="true"] {
+    transform: none;
+    filter: none;
+    opacity: 0.6;
+  }
+}

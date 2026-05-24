@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\every\\\\Downloads\\\\website-recreation\" -Recurse -Force | Select-Object FullName, PSIsContainer | Sort-Object FullName | ForEach-Object { if \\($_.PSIsContainer\\) { \"$\\($_.FullName\\)\\\\\" } else { $_.FullName } })",
+      "PowerShell(node --version)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "PowerShell(Get-Process -Name node -ErrorAction SilentlyContinue)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:3002\" -UseBasicParsing -TimeoutSec 3; \"UP: $\\($r.StatusCode\\)\" } catch { \"DOWN: $_\" })"
+    ]
+  }
+}

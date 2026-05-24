@@ -1,0 +1,133 @@
+{
+  "hero": {
+    "manifesto_title": "we don't build websites.",
+    "manifesto_subtitle": "we construct digital environments.",
+    "principle_interface": "interface is identity.",
+    "principle_motion": "motion is language.",
+    "principle_silence": "silence is design.",
+    "manifesto_label": "observ // manifesto",
+    "reveal_text": "From the initial idea to the finished digital product—with attention to every detail"
+  },
+  "services": {
+    "section_label": "// services",
+    "card_1_id": "A1",
+    "card_1_title": "Quick Start.",
+    "card_1_body": "A ready-made landing page or corporate website. Without downtime for your business. We launch a turnkey project — from brief to the first version online. No unnecessary approvals, just a working result.",
+    "card_2_id": "A2",
+    "card_2_title": "System Branding.",
+    "card_2_body": "Logo. Style. Brandbook. A visual language that needs no interpreter. We package your company into a single system — from button color to tone of voice. You'll be recognizable everywhere.",
+    "card_3_id": "A3",
+    "card_3_title": "Digital Environment.",
+    "card_3_body": "A mobile app you actually want to open again. Yes, we do apps too — for iOS and Android, with a human interface and zero lag. Your service is always in your customer's pocket, 24/7."
+  },
+  "metrics": {
+    "section_label": "SYS.METRICS // industry benchmarks",
+    "title": "why design and speed = money",
+    "subtitle": "research data we base our work on",
+    "live_indicator": "● live · benchmarks updated 2024"
+  },
+  "estimate": {
+    "section_label": "ESTIMATE.MODULE",
+    "title": "estimate your project",
+    "subtitle": "pick services — get a quote in 10 seconds",
+    "command_line": "$ observ estimate --interactive",
+    "select_services": "select services:",
+    "category_development": "development",
+    "category_branding": "branding",
+    "complexity_label": "complexity:",
+    "deadline_label": "deadline:",
+    "deadline_standard": "standard",
+    "deadline_rush": "rush +30%",
+    "estimate_label": "estimate:",
+    "timeline_label": "timeline:",
+    "weeks_unit": "weeks",
+    "cta": "init project →",
+    "empty_state": "> select at least one service to estimate",
+    "service_landing": "landing",
+    "service_corporate": "corporate",
+    "service_ecommerce": "e-commerce",
+    "service_mobile": "mobile app",
+    "service_logo": "logo",
+    "service_identity": "identity",
+    "service_brandbook": "brandbook",
+    "service_presentation": "presentation",
+    "service_graphics": "graphics",
+    "service_video": "video"
+  },
+  "modal": {
+    "title": "INIT.PROJECT",
+    "name_label": "NAME",
+    "name_placeholder": "your name",
+    "contact_label": "TELEGRAM OR EMAIL",
+    "contact_placeholder": "@username or you@example.com",
+    "notes_label": "NOTES",
+    "notes_placeholder": "special requirements, deadlines, references...",
+    "submit": "send request →",
+    "submit_loading": "sending...",
+    "error_message": "request failed. try again or write to @observseo",
+    "success_title": "request received",
+    "success_body": "estimated response: 4h. observer is watching."
+  },
+  "proof": {
+    "aria": "Why design matters — four frames of evidence",
+    "bridge": "Design isn't decoration. It's compound interest.",
+    "beats": {
+      "attention": {
+        "eyebrow": "ATTENTION",
+        "lead": "You have",
+        "support": "Before a visitor decides whether your site is worth their time.",
+        "source": "Stanford Web Credibility Project"
+      },
+      "trust": {
+        "eyebrow": "TRUST",
+        "lead": "Trust is",
+        "support": "Of how users judge your brand's credibility comes from design alone.",
+        "source": "Stanford / Google research"
+      },
+      "cost": {
+        "eyebrow": "COST",
+        "lead": "You lose",
+        "support": "Of mobile visitors the moment your site takes longer than three seconds.",
+        "source": "Google · SOASTA"
+      },
+      "return": {
+        "eyebrow": "RETURN",
+        "lead": "Design returns",
+        "support": "Every dollar invested in considered UX returns up to one hundred. Design-led companies outperform the S&P 500 by 211 %.",
+        "source": "Forrester · DMI Design Value Index"
+      }
+    }
+  },
+  "calculator": {
+    "commandLine": "$ observ estimate --budget-driven",
+    "budgetLabel": "budget",
+    "deadlineLabel": "deadline",
+    "deadlineStandard": "standard",
+    "deadlineRush": "rush +30%",
+    "totalLabel": "total",
+    "termLabel": "timeline",
+    "weeksShort": "weeks",
+    "emptyHint": "select services to estimate",
+    "submit": "init.project →",
+    "tier": {
+      "lite": "lite scope",
+      "standard": "standard",
+      "extended": "extended scope"
+    },
+    "hint": {
+      "minScope": "minimum scope — we'll discuss details in the brief",
+      "overhead": "this budget covers extended scope — room for marketing/content",
+      "rushBreakdown": "budget {budget} × rush 30%"
+    },
+    "groups": {
+      "development": "[ DEVELOPMENT ]",
+      "branding": "[ BRANDING ]"
+    }
+  },
+  "syslog": {
+    "title": "sys.log"
+  },
+  "header": {
+    "listen": "click to listen"
+  }
+}

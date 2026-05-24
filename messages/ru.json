@@ -1,0 +1,133 @@
+{
+  "hero": {
+    "manifesto_title": "мы не строим сайты.",
+    "manifesto_subtitle": "мы создаём цифровую среду.",
+    "principle_interface": "интерфейс — это идентичность.",
+    "principle_motion": "движение — это язык.",
+    "principle_silence": "молчание — это дизайн.",
+    "manifesto_label": "observ // манифест",
+    "reveal_text": "От идеи до готового цифрового продукта — с вниманием к каждой детали"
+  },
+  "services": {
+    "section_label": "// услуги",
+    "card_1_id": "A1",
+    "card_1_title": "Быстрый старт.",
+    "card_1_body": "Готовый лендинг или корпоративный сайт. Без простоя для бизнеса. Под ключ — от брифа до релиза. Без бесполезных согласований, только работающий результат.",
+    "card_2_id": "A2",
+    "card_2_title": "Системный брендинг.",
+    "card_2_body": "Логотип. Стиль. Брендбук. Визуальный язык, не требующий переводчика. Упаковываем компанию в единую систему — от цвета кнопки до тона голоса. Вас будут узнавать.",
+    "card_3_id": "A3",
+    "card_3_title": "Цифровая среда.",
+    "card_3_body": "Мобильное приложение, которое хочется открыть снова. Да, мы и приложения тоже — для iOS и Android, с человеческим интерфейсом и без лагов. Ваш сервис всегда в кармане у клиента, 24/7."
+  },
+  "metrics": {
+    "section_label": "SYS.METRICS // отраслевые бенчмарки",
+    "title": "почему дизайн и скорость = деньги",
+    "subtitle": "данные исследований, на которые мы опираемся",
+    "live_indicator": "● в эфире · данные обновлены 2024"
+  },
+  "estimate": {
+    "section_label": "МОДУЛЬ РАСЧЁТА",
+    "title": "рассчитайте проект",
+    "subtitle": "соберите услуги — получите смету за 10 секунд",
+    "command_line": "$ observ estimate --interactive",
+    "select_services": "выберите услуги:",
+    "category_development": "разработка",
+    "category_branding": "брендинг",
+    "complexity_label": "сложность:",
+    "deadline_label": "дедлайн:",
+    "deadline_standard": "стандарт",
+    "deadline_rush": "срочно +30%",
+    "estimate_label": "стоимость:",
+    "timeline_label": "сроки:",
+    "weeks_unit": "нед.",
+    "cta": "начать проект →",
+    "empty_state": "> выберите хотя бы одну услугу для расчёта",
+    "service_landing": "лендинг",
+    "service_corporate": "корпоративный сайт",
+    "service_ecommerce": "интернет-магазин",
+    "service_mobile": "мобильное приложение",
+    "service_logo": "логотип",
+    "service_identity": "айдентика",
+    "service_brandbook": "брендбук",
+    "service_presentation": "презентация",
+    "service_graphics": "графика",
+    "service_video": "видео"
+  },
+  "modal": {
+    "title": "INIT.PROJECT",
+    "name_label": "ИМЯ",
+    "name_placeholder": "ваше имя",
+    "contact_label": "TELEGRAM ИЛИ EMAIL",
+    "contact_placeholder": "@username или you@example.com",
+    "notes_label": "ЧТО ВАЖНО УЧЕСТЬ",
+    "notes_placeholder": "особые требования, дедлайны, референсы...",
+    "submit": "отправить запрос →",
+    "submit_loading": "отправка...",
+    "error_message": "ошибка запроса. попробуйте снова или напишите @observseo",
+    "success_title": "заявка принята",
+    "success_body": "ответ в течение 4 часов. наблюдатель следит."
+  },
+  "proof": {
+    "aria": "Почему дизайн решает — четыре кадра",
+    "bridge": "Дизайн — это не украшение. Это сложный процент.",
+    "beats": {
+      "attention": {
+        "eyebrow": "ВНИМАНИЕ",
+        "lead": "У вас есть",
+        "support": "Чтобы посетитель решил — стоит ваш сайт его времени или нет.",
+        "source": "Stanford Web Credibility Project"
+      },
+      "trust": {
+        "eyebrow": "ДОВЕРИЕ",
+        "lead": "Доверие — это",
+        "support": "Того, как пользователь оценивает ваш бренд, формирует только дизайн.",
+        "source": "Stanford / Google research"
+      },
+      "cost": {
+        "eyebrow": "ЦЕНА",
+        "lead": "Вы теряете",
+        "support": "Мобильных посетителей, если сайт грузится дольше трёх секунд.",
+        "source": "Google · SOASTA"
+      },
+      "return": {
+        "eyebrow": "ВОЗВРАТ",
+        "lead": "Дизайн возвращает",
+        "support": "Каждый доллар, вложенный в продуманный UX, возвращается стократно. Дизайн-ориентированные компании обгоняют S&P 500 на 211 %.",
+        "source": "Forrester · DMI Design Value Index"
+      }
+    }
+  },
+  "calculator": {
+    "commandLine": "$ observ estimate --budget-driven",
+    "budgetLabel": "бюджет",
+    "deadlineLabel": "дедлайн",
+    "deadlineStandard": "стандарт",
+    "deadlineRush": "срочно +30%",
+    "totalLabel": "итого",
+    "termLabel": "срок",
+    "weeksShort": "нед.",
+    "emptyHint": "выберите услуги для расчёта",
+    "submit": "init.project →",
+    "tier": {
+      "lite": "базовый объём",
+      "standard": "стандарт",
+      "extended": "расширенный объём"
+    },
+    "hint": {
+      "minScope": "минимальный объём — обсудим детали в брифе",
+      "overhead": "этот бюджет покрывает расширенный объём — возможен запас на маркетинг/контент",
+      "rushBreakdown": "бюджет {budget} × срочно 30%"
+    },
+    "groups": {
+      "development": "[ РАЗРАБОТКА ]",
+      "branding": "[ БРЕНДИНГ ]"
+    }
+  },
+  "syslog": {
+    "title": "sys.log"
+  },
+  "header": {
+    "listen": "нажмите для воспроизведения"
+  }
+}
