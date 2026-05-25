@@ -1,21 +1,40 @@
-import { ProxyAgent } from "undici"
+import https from "https"
+import { SocksProxyAgent } from "socks-proxy-agent"
 
-const API = () => `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}`
+const TG_HOST = "api.telegram.org"
 
-function getDispatcher() {
-  if (process.env.HTTP_PROXY) return new ProxyAgent(process.env.HTTP_PROXY)
+function getAgent(): https.Agent | undefined {
+  if (process.env.SOCKS_PROXY) return new SocksProxyAgent(process.env.SOCKS_PROXY)
   return undefined
 }
 
-export async function tgCall(method: string, body: object): Promise<any> {
-  const r = await fetch(`${API()}/${method}`, {
-    method:  "POST",
-    headers: { "Content-Type": "application/json" },
-    body:    JSON.stringify(body),
-    // @ts-ignore — undici dispatcher for proxy
-    dispatcher: getDispatcher(),
+function tgRequest(path: string, data: object): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const body = JSON.stringify(data)
+    const req = https.request(
+      {
+        hostname: TG_HOST,
+        path,
+        method:   "POST",
+        headers:  { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(body) },
+        agent:    getAgent(),
+      },
+      res => {
+        let raw = ""
+        res.on("data", c => (raw += c))
+        res.on("end",  () => { try { resolve(JSON.parse(raw)) } catch { resolve({}) } })
+      },
+    )
+    req.on("error", reject)
+    req.write(body)
+    req.end()
   })
-  return r.json()
+}
+
+const API = () => `/bot${process.env.TELEGRAM_BOT_TOKEN}`
+
+export async function tgCall(method: string, body: object): Promise<any> {
+  return tgRequest(`${API()}/${method}`, body)
 }
 
 export async function tgSend(chatId: number | string, text: string, extra: object = {}) {
@@ -89,17 +108,15 @@ export async function sendLeadNotification(lead: LeadData): Promise<boolean> {
     .filter(l => l !== "")
     .join("\n")
 
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method:  "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id:                 chatId,
+  try {
+    const res = await tgRequest(`/bot${token}/sendMessage`, {
+      chat_id:                  chatId,
       text,
-      parse_mode:              "HTML",
+      parse_mode:               "HTML",
       disable_web_page_preview: true,
-    }),
-    // @ts-ignore — undici dispatcher for proxy
-    dispatcher: getDispatcher(),
-  })
-  return res.ok
+    })
+    return res.ok === true
+  } catch {
+    return false
+  }
 }
