@@ -1,9 +1,9 @@
-import { SocksProxyAgent } from "socks-proxy-agent"
+import { ProxyAgent } from "undici"
 
 const API = () => `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}`
 
-function getAgent() {
-  if (process.env.SOCKS_PROXY) return new SocksProxyAgent(process.env.SOCKS_PROXY)
+function getDispatcher() {
+  if (process.env.HTTP_PROXY) return new ProxyAgent(process.env.HTTP_PROXY)
   return undefined
 }
 
@@ -12,8 +12,8 @@ export async function tgCall(method: string, body: object): Promise<any> {
     method:  "POST",
     headers: { "Content-Type": "application/json" },
     body:    JSON.stringify(body),
-    // @ts-ignore — Node fetch accepts dispatcher/agent
-    agent:   getAgent(),
+    // @ts-ignore — undici dispatcher for proxy
+    dispatcher: getDispatcher(),
   })
   return r.json()
 }
@@ -98,8 +98,8 @@ export async function sendLeadNotification(lead: LeadData): Promise<boolean> {
       parse_mode:              "HTML",
       disable_web_page_preview: true,
     }),
-    // @ts-ignore
-    agent: getAgent(),
+    // @ts-ignore — undici dispatcher for proxy
+    dispatcher: getDispatcher(),
   })
   return res.ok
 }
