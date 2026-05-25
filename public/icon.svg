@@ -1,10 +1,24 @@
-<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="180" height="180" rx="40" fill="black"/>
-  <!-- O: white rounded rect with black inner cutout -->
-  <rect x="14" y="38" width="66" height="104" rx="18" fill="white"/>
-  <rect x="29" y="54" width="36" height="72" rx="10" fill="black"/>
-  <!-- V: two vertical blocks joined at base -->
-  <rect x="96" y="38" width="27" height="70" rx="13" fill="white"/>
-  <rect x="133" y="38" width="27" height="70" rx="13" fill="white"/>
-  <rect x="96" y="108" width="64" height="34" rx="13" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" fill="none">
+  <!-- Isometric wireframe cube — green edges, transparent background -->
+  <!-- Visible edges -->
+  <g stroke="#22c55e" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top face (diamond) -->
+    <line x1="90" y1="35" x2="138" y2="63"/>
+    <line x1="90" y1="35" x2="42" y2="63"/>
+    <line x1="138" y1="63" x2="90" y2="90"/>
+    <line x1="42" y1="63" x2="90" y2="90"/>
+    <!-- Vertical edges -->
+    <line x1="138" y1="63" x2="138" y2="118"/>
+    <line x1="42" y1="63" x2="42" y2="118"/>
+    <line x1="90" y1="90" x2="90" y2="145"/>
+    <!-- Bottom edges -->
+    <line x1="138" y1="118" x2="90" y2="145"/>
+    <line x1="42" y1="118" x2="90" y2="145"/>
+  </g>
+  <!-- Hidden edges (dashed, faint) -->
+  <g stroke="#22c55e" stroke-width="4" stroke-linecap="round" stroke-dasharray="6,5" opacity="0.25">
+    <line x1="90" y1="90" x2="138" y2="118"/>
+    <line x1="90" y1="90" x2="42" y2="118"/>
+    <line x1="90" y1="90" x2="90" y2="35"/>
+  </g>
 </svg>
