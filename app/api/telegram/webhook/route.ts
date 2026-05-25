@@ -226,6 +226,15 @@ async function submitLead(chatId: number, s: Session, notes: string) {
 
 // ── Entry point ───────────────────────────────────────────────────────────────
 export async function POST(req: Request) {
+  // Telegram sets this header when a webhook secret is configured via setWebhook.
+  // Without a valid secret the endpoint rejects all requests — this prevents
+  // anyone from injecting fake updates into the bot flow.
+  const secret = process.env.TELEGRAM_WEBHOOK_SECRET
+  const header = req.headers.get("x-telegram-bot-api-secret-token")
+  if (!secret || header !== secret) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 })
+  }
+
   try {
     const update = await req.json()
     if (update.message)        await handleMessage(update.message)
