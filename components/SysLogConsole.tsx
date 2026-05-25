@@ -2,6 +2,35 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 
+// ── ASCII art ─────────────────────────────────────────────────────────────────
+const ART_OBSERV = `
+ ___  _    ___ ___ _ __  __   __
+/ _ \\| |__(_-</ -_)| '__|\\  \\ / /
+\\___/| '_ \\/__/\\___||_|    \\ V /
+     |_.__/               \\_/   `.trimStart()
+
+const ART_FACE = `
+    T
+ .-"-.
+|  ___|
+| (.\\/.)
+|  ,,,'
+| '###
+ '----'`.trimStart()
+
+const ART_FIGURE = `
+     '-.
+        '-. _____
+ .-._      |     '.
+:  ..      |      :
+'-._+      |    .-'
+ /  \\     .'i--i
+/    \\ .-'_/____\\___
+    .-'  :       `.trimStart()
+
+const ART_CYCLE = [ART_FACE, ART_FIGURE]
+
+// ── Logs ──────────────────────────────────────────────────────────────────────
 const SECTION_LOGS: Record<string, string[]> = {
   hero: [
     "boot.sequence initiated",
@@ -52,27 +81,48 @@ function ts(): string {
   return new Date().toTimeString().slice(0, 8)
 }
 
-interface LogLine { id: number; text: string }
+interface LogLine {
+  id:    number
+  text:  string
+  isArt: boolean
+}
 
 let _id = 0
 
 export function SysLogConsole({ section }: { section: string }) {
   const [lines,    setLines]    = useState<LogLine[]>([])
   const [expanded, setExpanded] = useState(false)
-  const queueRef  = useRef<string[]>([])
-  const timerRef  = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  const bodyRef   = useRef<HTMLDivElement>(null)
+  const queueRef   = useRef<string[]>([])
+  const timerRef   = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const artTimerRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
+  const artIndexRef = useRef(0)
+  const bodyRef    = useRef<HTMLDivElement>(null)
 
-  const push = useCallback((text: string) => {
-    setLines(prev => [...prev.slice(-40), { id: _id++, text: `[${ts()}] ${text}` }])
+  const push = useCallback((text: string, isArt = false) => {
+    setLines(prev => [...prev.slice(-60), { id: _id++, text: isArt ? text : `[${ts()}] ${text}`, isArt }])
   }, [])
 
-  // Reset queue on section change
+  // Boot: show ObserV ascii on mount
+  useEffect(() => {
+    const t = setTimeout(() => push(ART_OBSERV, true), 400)
+    return () => clearTimeout(t)
+  }, [push])
+
+  // Rotate drawings every 35s
+  useEffect(() => {
+    artTimerRef.current = setInterval(() => {
+      push(ART_CYCLE[artIndexRef.current % ART_CYCLE.length], true)
+      artIndexRef.current++
+    }, 35_000)
+    return () => clearInterval(artTimerRef.current)
+  }, [push])
+
+  // Reset log queue on section change
   useEffect(() => {
     queueRef.current = [...(SECTION_LOGS[section] ?? HEARTBEAT)]
   }, [section])
 
-  // Drip logs on interval
+  // Drip logs
   useEffect(() => {
     const fire = () => {
       const msg =
@@ -82,11 +132,11 @@ export function SysLogConsole({ section }: { section: string }) {
       push(msg)
       timerRef.current = setTimeout(fire, 1500 + Math.random() * 1000)
     }
-    timerRef.current = setTimeout(fire, 600)
+    timerRef.current = setTimeout(fire, 800)
     return () => clearTimeout(timerRef.current)
   }, [push])
 
-  // Auto-scroll when expanded
+  // Auto-scroll
   useEffect(() => {
     if (expanded && bodyRef.current)
       bodyRef.current.scrollTop = bodyRef.current.scrollHeight
@@ -99,16 +149,15 @@ export function SysLogConsole({ section }: { section: string }) {
     return () => document.removeEventListener("keydown", fn)
   }, [])
 
-  const lastMsg = lines.length > 0
-    ? (lines[lines.length - 1].text.split("] ")[1] ?? "")
-    : ""
+  const lastLine = lines.findLast(l => !l.isArt)
+  const lastMsg  = lastLine ? (lastLine.text.split("] ")[1] ?? "") : ""
 
   return (
     <div
       className="fixed bottom-6 right-6 z-[55] font-mono text-[11px] select-none hidden sm:flex flex-col"
       style={{
-        width:      expanded ? 360 : 262,
-        height:     expanded ? 228 : 36,
+        width:      expanded ? 380 : 262,
+        height:     expanded ? 280 : 36,
         transition: "width 220ms ease-out, height 220ms ease-out",
         transformOrigin: "bottom right",
         overflow:   "hidden",
@@ -121,11 +170,11 @@ export function SysLogConsole({ section }: { section: string }) {
           className="flex items-center justify-between px-3 h-9 shrink-0 hover:bg-green-500/5 transition-colors w-full"
           onClick={() => setExpanded(e => !e)}
           aria-expanded={expanded}
-          aria-controls="syslog-body"
+          aria-controls="ov-console-body"
         >
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-green-500/70 animate-pulse shrink-0" />
-            <span className="text-green-500/50 tracking-[0.2em] uppercase text-[10px]">sys.log</span>
+            <span className="text-green-500/50 tracking-[0.2em] uppercase text-[10px]">ov.console</span>
           </div>
           <div className="flex items-center gap-2 min-w-0">
             {!expanded && (
@@ -139,20 +188,33 @@ export function SysLogConsole({ section }: { section: string }) {
 
         {/* Log body */}
         <div
-          id="syslog-body"
+          id="ov-console-body"
           ref={bodyRef}
           role="log"
           aria-live="polite"
           className="overflow-y-auto px-3 pb-3 flex flex-col gap-[2px] flex-1"
         >
-          {lines.map((line, i) => (
-            <div key={line.id} className="text-green-500/65 leading-relaxed whitespace-nowrap overflow-hidden text-ellipsis">
-              {line.text}
-              {i === lines.length - 1 && (
-                <span className="inline-block w-[6px] h-[10px] bg-green-500/70 ml-0.5 align-middle animate-pulse" />
-              )}
-            </div>
-          ))}
+          {lines.map((line, i) =>
+            line.isArt ? (
+              <pre
+                key={line.id}
+                className="text-green-500/45 leading-tight py-1 border-t border-green-500/10 mt-1"
+                style={{ fontSize: "8.5px", fontFamily: "inherit" }}
+              >
+                {line.text}
+              </pre>
+            ) : (
+              <div
+                key={line.id}
+                className="text-green-500/65 leading-relaxed whitespace-nowrap overflow-hidden text-ellipsis"
+              >
+                {line.text}
+                {i === lines.length - 1 && (
+                  <span className="inline-block w-[6px] h-[10px] bg-green-500/70 ml-0.5 align-middle animate-pulse" />
+                )}
+              </div>
+            )
+          )}
         </div>
       </div>
     </div>
