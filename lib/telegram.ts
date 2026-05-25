@@ -1,10 +1,19 @@
+import { SocksProxyAgent } from "socks-proxy-agent"
+
 const API = () => `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}`
+
+function getAgent() {
+  if (process.env.SOCKS_PROXY) return new SocksProxyAgent(process.env.SOCKS_PROXY)
+  return undefined
+}
 
 export async function tgCall(method: string, body: object): Promise<any> {
   const r = await fetch(`${API()}/${method}`, {
     method:  "POST",
     headers: { "Content-Type": "application/json" },
     body:    JSON.stringify(body),
+    // @ts-ignore — Node fetch accepts dispatcher/agent
+    agent:   getAgent(),
   })
   return r.json()
 }
@@ -89,6 +98,8 @@ export async function sendLeadNotification(lead: LeadData): Promise<boolean> {
       parse_mode:              "HTML",
       disable_web_page_preview: true,
     }),
+    // @ts-ignore
+    agent: getAgent(),
   })
   return res.ok
 }
