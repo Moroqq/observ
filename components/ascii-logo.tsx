@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 
 interface AsciiLogoProps {
   onHidden?: () => void
+  fontSize?: number
 }
 
 const ASCII_ART = `
@@ -17,7 +18,7 @@ const ASCII_ART = `
 
 const GLITCH_CHARS = "█▓▒░╔╗╚╝║═@#$%&*!?<>[]{}~^"
 
-export function AsciiLogo({ onHidden }: AsciiLogoProps) {
+export function AsciiLogo({ onHidden, fontSize = 30 }: AsciiLogoProps) {
   const [phase, setPhase]           = useState<"appearing" | "spinning" | "done">("appearing")
   const [glitchText, setGlitchText] = useState("")
 
@@ -76,7 +77,7 @@ export function AsciiLogo({ onHidden }: AsciiLogoProps) {
         className={`text-white font-mono leading-none select-none ${
           phase === "appearing" ? "animate-pulse" : ""
         }`}
-        style={{ fontSize: 30, whiteSpace: "pre" }}
+        style={{ fontSize, whiteSpace: "pre" }}
       >
         {text}
       </pre>

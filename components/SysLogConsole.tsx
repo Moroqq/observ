@@ -28,7 +28,29 @@ const ART_FIGURE = `
 /    \\ .-'_/____\\___
     .-'  :       `.trimStart()
 
-const ART_CYCLE = [ART_FACE, ART_FIGURE]
+const ART_ROBOT = `
+        || |                               ) )
+          || |   ,                          '-'
+          || |  | |
+          || '--' |
+    ,,    || .----'
+   || |   || |
+   |  '---'| |
+   '------.| |                                  _____
+   ((_))  || |      (  _                       / /|\\ \\
+   (o o)  || |      ))("),                    | | | | |
+____\\_/___||_|_____((__^_))____________________\\_\\|/_/__ldb`.trimStart()
+
+const ART_PLANE = `
+jgs    /     /\\
+      /     /  \\
+     /_____/----\\_    (
+    "     "          ).
+   _ ___          o (:') o
+  (@))_))        o ~/~~\\~ o
+                  o  o  o`.trimStart()
+
+const ART_CYCLE = [ART_FACE, ART_FIGURE, ART_ROBOT, ART_PLANE]
 
 // ── Logs ──────────────────────────────────────────────────────────────────────
 const SECTION_LOGS: Record<string, string[]> = {

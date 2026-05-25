@@ -12,10 +12,10 @@ export interface Service {
 }
 
 export const SERVICES: Service[] = [
-  { id: "landing",      category: "development", label: "лендинг",              basePrice: 15_000, pricePrefix: "до", priceMode: "fixed", baseWeeks: [1, 3]  },
-  { id: "corporate",    category: "development", label: "корпоративный сайт",   basePrice: 15_000, pricePrefix: "от", priceMode: "fixed", baseWeeks: [3, 6]  },
-  { id: "ecommerce",    category: "development", label: "интернет-магазин",     basePrice: 20_000, pricePrefix: "от", priceMode: "fixed", baseWeeks: [4, 8]  },
-  { id: "mobile",       category: "development", label: "мобильное приложение", basePrice:  5_000, pricePrefix: "от", priceMode: "fixed", baseWeeks: [6, 12] },
+  { id: "landing",      category: "development", label: "лендинг",              basePrice:  5_000, pricePrefix: "от", priceMode: "fixed", baseWeeks: [1, 3]  },
+  { id: "corporate",    category: "development", label: "корпоративный сайт",   basePrice: 20_000, pricePrefix: "от", priceMode: "fixed", baseWeeks: [3, 6]  },
+  { id: "ecommerce",    category: "development", label: "интернет-магазин",     basePrice: 30_000, pricePrefix: "от", priceMode: "fixed", baseWeeks: [4, 8]  },
+  { id: "mobile",       category: "development", label: "мобильное приложение", basePrice: 10_000, pricePrefix: "от", priceMode: "fixed", baseWeeks: [6, 12] },
   { id: "logo",         category: "branding",    label: "логотип",              basePrice:  4_000, pricePrefix: "от", priceMode: "fixed", baseWeeks: [1, 2]  },
   { id: "identity",     category: "branding",    label: "айдентика",            basePrice:      0, pricePrefix: "",   priceMode: "quote", baseWeeks: [2, 4]  },
   { id: "brandbook",    category: "branding",    label: "брендбук",             basePrice:      0, pricePrefix: "",   priceMode: "quote", baseWeeks: [3, 5]  },

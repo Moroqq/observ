@@ -53,12 +53,25 @@ export default function Home() {
   const [rowHeight,    setRowHeight]    = useState(0)
   const [a2Height,     setA2Height]     = useState(0)
   const [hoveredCard,  setHoveredCard]  = useState<string | null>(null)
+  const [isMobile,     setIsMobile]     = useState(false)
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const rowRef   = useRef<HTMLDivElement>(null)
   const a2Ref    = useRef<HTMLDivElement>(null)
   const a1Ref    = useRef<HTMLDivElement>(null)
   const a3Ref    = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    history.scrollRestoration = "manual"
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
 
   useEffect(() => {
     const fn = () => setScrollY(window.scrollY)
@@ -166,28 +179,120 @@ export default function Home() {
   const logoTranslateY = measured ? -(phase3 * a2StartOffset) : 0
   const revealOpacity  = Math.max(0, 1 - a13P * 2.5)
 
+  const header = (
+    <div className="sticky top-0 z-10 bg-background">
+      <Ticker />
+      <div className="border-b border-border py-3 px-4 flex justify-between items-center">
+        <SocialLinks />
+        <div className="flex items-center gap-4">
+          <LocaleSwitcher />
+          <MiniPlayer
+            isPlaying={isPlaying}
+            onToggle={togglePlay}
+            onNext={playNext}
+            onPrevious={playPrevious}
+            volume={volume}
+            onVolumeChange={setVolume}
+          />
+        </div>
+      </div>
+    </div>
+  )
+
+  // ── Mobile layout ────────────────────────────────────────────────────────────
+  if (isMobile) return (
+    <main className="bg-black text-foreground flex flex-col overflow-x-hidden w-full">
+      <audio ref={audioRef} src={playlist[currentTrack]} onEnded={playNext} />
+      {header}
+
+      {/* Logo */}
+      <section className="flex flex-col items-center justify-center pt-12 pb-8 px-6 bg-black">
+        <div style={{ width: "75vw", maxWidth: 300, aspectRatio: "1 / 1", position: "relative" }}>
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: showFrames ? 1 : 0, transition: "opacity 0.4s ease", pointerEvents: "none" }}>
+            <FrameSequence totalFrames={407} framePath="/frames/observ-logo_frame_" frameExtension="png" isPlaying={showFrames} loop={true} style={{ width: "100%", height: "auto", display: "block" }} />
+          </div>
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: showFrames ? 0 : 1, transition: "opacity 0.4s ease" }}>
+            <AsciiLogo onHidden={() => setShowFrames(true)} fontSize={15} />
+          </div>
+        </div>
+        <p className="text-white/30 text-[10px] font-mono tracking-[0.4em] uppercase mt-4">observ.team</p>
+      </section>
+
+      {/* Cards A1, A2, A3 — vertical */}
+      <section className="px-4 pb-10 space-y-4 bg-black">
+        <ServiceCard
+          label={t("services.card_1_id")} title={t("services.card_1_title")} description={t("services.card_1_body")}
+          framePath="/frameswebsite/websiteobrez_frame_" totalFrames={101}
+          cardId="A1" hoveredCardId={hoveredCard} onHoverChange={setHoveredCard}
+        />
+        <ServiceCard
+          label={t("services.card_2_id")} title={t("services.card_2_title")} description={t("services.card_2_body")}
+          framePath="/framesdesign/designobrez_frame_" totalFrames={151}
+          cardId="A2" hoveredCardId={hoveredCard} onHoverChange={setHoveredCard}
+        />
+        <ServiceCard
+          label={t("services.card_3_id")} title={t("services.card_3_title")} description={t("services.card_3_body")}
+          framePath="/framesapp/prilozhenieobrez_frame_" totalFrames={103}
+          cardId="A3" hoveredCardId={hoveredCard} onHoverChange={setHoveredCard}
+        />
+      </section>
+
+      {/* Manifesto */}
+      <section className="px-6 py-12 text-center border-t border-border bg-black">
+        <div className="text-[10px] tracking-[0.5em] uppercase font-mono mb-6"
+          style={{ color: "rgba(74,222,128,0.9)", textShadow: "0 0 10px rgba(74,222,128,0.5)" }}>
+          {t("hero.manifesto_label")}
+        </div>
+        <div className="font-mono mb-6"
+          style={{ fontSize: "clamp(22px, 6vw, 32px)", lineHeight: 1.35, color: "rgba(255,255,255,0.97)" }}>
+          {t("hero.manifesto_title")}<br />{t("hero.manifesto_subtitle")}
+        </div>
+        <div className="w-10 h-px bg-green-500/20 mx-auto mb-6" />
+        <div className="font-mono space-y-3" style={{ fontSize: "13px", color: "rgba(255,255,255,0.50)" }}>
+          <p>{t("hero.principle_interface")}</p>
+          <p>{t("hero.principle_motion")}</p>
+          <p>{t("hero.principle_silence")}</p>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="px-4 py-10 border-t border-border bg-black">
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            { value: "50",  unit: "ms", id: "attention" },
+            { value: "75",  unit: "%",  id: "trust"     },
+            { value: "53",  unit: "%",  id: "cost"      },
+            { value: "100", unit: "×",  id: "return"    },
+          ].map(b => (
+            <div key={b.id} className="border border-green-500/20 p-4 font-mono"
+              style={{ background: "rgba(0,255,106,0.03)" }}>
+              <div style={{ fontSize: "clamp(28px, 8vw, 42px)", color: "var(--brand)", lineHeight: 1 }}>
+                {b.unit === "×" ? `${b.value}${b.unit}` : `${b.value}${b.unit}`}
+              </div>
+              <div className="text-white/40 text-[10px] uppercase tracking-widest mt-2">
+                {t(`proof.beats.${b.id}.eyebrow`)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Calculator */}
+      <section className="px-4 py-10 border-t border-border bg-black overflow-hidden">
+        <EstimateModule locale={locale as "ru" | "en"} />
+      </section>
+
+      <GlitchOverlay />
+    </main>
+  )
+
+  // ── Desktop layout ───────────────────────────────────────────────────────────
   return (
     <main className="bg-background text-foreground flex flex-col" style={{ minHeight: "max(700vh, 9000px)" }}>
       <audio ref={audioRef} src={playlist[currentTrack]} onEnded={playNext} />
 
       {/* ── Sticky header ─────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-10 bg-background">
-        <Ticker />
-        <div className="border-b border-border py-3 px-4 flex justify-between items-center">
-          <SocialLinks />
-          <div className="flex items-center gap-4">
-            <LocaleSwitcher />
-            <MiniPlayer
-              isPlaying={isPlaying}
-              onToggle={togglePlay}
-              onNext={playNext}
-              onPrevious={playPrevious}
-              volume={volume}
-              onVolumeChange={setVolume}
-            />
-          </div>
-        </div>
-      </div>
+      {header}
 
       {/* ── Fixed viewport ─────────────────────────────────────────────── */}
       <div className="fixed inset-0 top-[88px] bg-black" style={{ overflow: "visible" }}>

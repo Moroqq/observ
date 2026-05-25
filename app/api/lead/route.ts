@@ -42,4 +42,6 @@ export async function POST(req: Request) {
     console.error("[lead] unhandled", err)
     return NextResponse.json({ error: "internal" }, { status: 500 })
   }
+
+
 }
