@@ -86,6 +86,8 @@ function servicesKeyboard(sel) {
   }
 }
 
+const BACK_ROW = [{ text: "‹  изменить услуги", callback_data: "back_services" }]
+
 function budgetKeyboard() {
   return {
     inline_keyboard: [
@@ -100,18 +102,24 @@ function budgetKeyboard() {
         { text: "500к+",    callback_data: "budget:1000000" },
       ],
       [{ text: "─  указать свой бюджет  ─", callback_data: "budget:custom" }],
+      BACK_ROW,
     ],
   }
 }
 
 function deadlineKeyboard() {
   return {
-    inline_keyboard: [[
-      { text: "стандарт",       callback_data: "deadline:standard" },
-      { text: "rush  ·  +30%",  callback_data: "deadline:rush"     },
-    ]],
+    inline_keyboard: [
+      [
+        { text: "стандарт",       callback_data: "deadline:standard" },
+        { text: "rush  ·  +30%",  callback_data: "deadline:rush"     },
+      ],
+      BACK_ROW,
+    ],
   }
 }
+
+const backKeyboard = () => ({ inline_keyboard: [BACK_ROW] })
 
 // ── Message templates ─────────────────────────────────────────────────────────
 const S = "─".repeat(33)
@@ -319,7 +327,7 @@ async function handleMessage(msg) {
     }
     s.name = text
     s.step = "contact"
-    await tgSend(chatId, MSG.contact)
+    await tgSend(chatId, MSG.contact, { reply_markup: backKeyboard() })
     return
   }
 
@@ -330,7 +338,7 @@ async function handleMessage(msg) {
     }
     s.contact = text
     s.step    = "notes"
-    await tgSend(chatId, MSG.notes)
+    await tgSend(chatId, MSG.notes, { reply_markup: backKeyboard() })
     return
   }
 
@@ -364,6 +372,18 @@ async function handleCallback(cb) {
     return
   }
 
+  if (data === "back_services") {
+    await tgAnswer(cbId)
+    s.step    = "services"
+    s.budget  = 0
+    s.rush    = false
+    s.name    = ""
+    s.contact = ""
+    const res  = await tgSend(chatId, MSG.services(s.selectedIds), { reply_markup: servicesKeyboard(s.selectedIds) })
+    s.svcMsgId = res.result?.message_id
+    return
+  }
+
   if (data === "confirm_services") {
     await tgAnswer(cbId)
     s.step = "budget"
@@ -389,7 +409,7 @@ async function handleCallback(cb) {
     s.rush = data === "deadline:rush"
     s.step = "name"
     await tgAnswer(cbId)
-    await tgSend(chatId, MSG.name)
+    await tgSend(chatId, MSG.name, { reply_markup: backKeyboard() })
     return
   }
 
