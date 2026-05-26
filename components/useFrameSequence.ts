@@ -6,8 +6,8 @@ export type PlayState = "idle" | "forward" | "reverse" | "leaving"
 
 interface Options {
   frameUrls: string[]
-  fps?: number      // default 30
-  leaveFps?: number // default 45  (faster on mouseleave)
+  fps?: number
+  leaveFps?: number
 }
 
 interface Result {
@@ -16,7 +16,43 @@ interface Result {
   ready: boolean
   enter: () => void
   leave: () => void
-  imagesRef: React.MutableRefObject<HTMLImageElement[]>
+  imagesRef: React.RefObject<HTMLImageElement[]>
+}
+
+// iOS Safari: ring buffer constants
+const RING_AHEAD   = 8  // frames to keep loaded ahead of current position
+const RING_BEHIND  = 2  // frames to keep loaded behind
+const RING_STICKY  = 2  // first N frames are never released (poster / snap-back)
+
+function detectIOS(): boolean {
+  if (typeof window === "undefined") return false
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  )
+}
+
+function ringAdvance(
+  urls: string[],
+  imgs: HTMLImageElement[],
+  cur: number,
+) {
+  const total = urls.length
+  // load ahead window
+  for (let i = cur; i <= Math.min(cur + RING_AHEAD, total - 1); i++) {
+    if (!imgs[i]) {
+      const img = new Image()
+      img.src = urls[i]
+      imgs[i] = img
+    }
+  }
+  // release behind (but keep sticky first frames)
+  for (let i = RING_STICKY; i < cur - RING_BEHIND; i++) {
+    if (imgs[i]) {
+      imgs[i].src = ""
+      imgs[i] = null as any
+    }
+  }
 }
 
 export function useFrameSequence({
@@ -28,43 +64,66 @@ export function useFrameSequence({
   const [state, setState] = useState<PlayState>("idle")
   const [ready, setReady] = useState(false)
 
-  const stateRef    = useRef<PlayState>("idle")
-  const indexRef    = useRef(0)
-  const lastTickRef = useRef(0)
-  const rafRef      = useRef<number | null>(null)
-  const imagesRef   = useRef<HTMLImageElement[]>([])
+  const isIOSRef     = useRef(false)
+  const stateRef     = useRef<PlayState>("idle")
+  const indexRef     = useRef(0)
+  const lastTickRef  = useRef(0)
+  const rafRef       = useRef<number | null>(null)
+  const imagesRef    = useRef<HTMLImageElement[]>([])
+  const frameUrlsRef = useRef(frameUrls)
 
-  // Bulletproof preload — guaranteed to resolve even on 404 or decode failure
+  useEffect(() => { frameUrlsRef.current = frameUrls }, [frameUrls])
+
+  // ── Preload ────────────────────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false
+
+    // cancel any running animation
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
+    }
+
     setReady(false)
+    stateRef.current = "idle"
+    setState("idle")
     indexRef.current = 0
     setIndex(0)
 
-    const imgs: HTMLImageElement[] = frameUrls.map(src => {
-      const img = new Image()
-      img.src = src
-      return img
-    })
+    const ios = detectIOS()
+    isIOSRef.current = ios
+    imagesRef.current = new Array(frameUrls.length).fill(null)
 
-    const decodeAll = imgs.map(img =>
-      new Promise<void>(resolve => {
-        const tryDecode = () => img.decode().then(() => resolve(), () => resolve())
-        if (img.complete && img.naturalWidth > 0) {
-          tryDecode()
-        } else {
-          img.onload  = tryDecode
-          img.onerror = () => resolve()
+    if (ios) {
+      // iOS Safari: preload only frame 0 as the poster, then mark ready.
+      // Remaining frames are loaded on-demand via ring buffer in tick().
+      const img = new Image()
+      img.src = frameUrls[0]
+      imagesRef.current[0] = img
+      const onDone = () => { if (!cancelled) setReady(true) }
+      if (img.complete && img.naturalWidth > 0) { onDone() }
+      else { img.onload = onDone; img.onerror = onDone }
+    } else {
+      // Non-iOS: preload all frames before playing (existing behaviour)
+      const imgs: HTMLImageElement[] = frameUrls.map(src => {
+        const img = new Image()
+        img.src = src
+        return img
+      })
+      const decodeAll = imgs.map(img =>
+        new Promise<void>(resolve => {
+          const tryDecode = () => img.decode().then(() => resolve(), () => resolve())
+          if (img.complete && img.naturalWidth > 0) { tryDecode() }
+          else { img.onload = tryDecode; img.onerror = () => resolve() }
+        })
+      )
+      Promise.all(decodeAll).then(() => {
+        if (!cancelled) {
+          imagesRef.current = imgs
+          setReady(true)
         }
       })
-    )
-
-    Promise.all(decodeAll).then(() => {
-      if (!cancelled) {
-        imagesRef.current = imgs
-        setReady(true)
-      }
-    })
+    }
 
     return () => { cancelled = true }
   }, [frameUrls])
@@ -83,15 +142,32 @@ export function useFrameSequence({
 
     if (now - last >= interval) {
       lastTickRef.current = now
-      const total = frameUrls.length
+      const urls  = frameUrlsRef.current
+      const total = urls.length
       let next    = indexRef.current
+
+      // ── iOS leaving: snap to frame 0 instantly (no stepback) ──────────────
+      if (isIOSRef.current && stateRef.current === "leaving") {
+        indexRef.current = 0
+        setIndex(0)
+        stateRef.current = "idle"
+        setState("idle")
+        stopRaf()
+        return
+      }
 
       if (stateRef.current === "forward") {
         next = indexRef.current + 1
         if (next >= total - 1) {
-          next = total - 1
-          stateRef.current = "reverse"
-          setState("reverse")
+          if (isIOSRef.current) {
+            // iOS: loop forward from start instead of reversing
+            next = 0
+            ringAdvance(urls, imagesRef.current, 0)
+          } else {
+            next = total - 1
+            stateRef.current = "reverse"
+            setState("reverse")
+          }
         }
       } else if (stateRef.current === "reverse") {
         next = indexRef.current - 1
@@ -115,10 +191,15 @@ export function useFrameSequence({
 
       indexRef.current = next
       setIndex(next)
+
+      // advance ring buffer on every tick (iOS only)
+      if (isIOSRef.current) {
+        ringAdvance(urls, imagesRef.current, next)
+      }
     }
 
     rafRef.current = requestAnimationFrame(tick)
-  }, [frameUrls.length, fps, leaveFps, stopRaf])
+  }, [fps, leaveFps, stopRaf])
 
   const enter = useCallback(() => {
     if (!ready) return
@@ -133,6 +214,11 @@ export function useFrameSequence({
     } else if (stateRef.current === "reverse") {
       stateRef.current = "forward"
       setState("forward")
+    }
+
+    // iOS: prime the ring buffer from current position before playback starts
+    if (isIOSRef.current) {
+      ringAdvance(frameUrlsRef.current, imagesRef.current, indexRef.current)
     }
 
     if (rafRef.current === null) {
