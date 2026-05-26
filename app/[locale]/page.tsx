@@ -13,6 +13,7 @@ import { GlitchOverlay } from "@/components/glitch-overlay"
 import { SysLogConsole } from "@/components/SysLogConsole"
 import { EstimateModule } from "@/components/EstimateModule"
 import { Proof } from "@/components/Proof/Proof"
+import { MobileProof } from "@/components/Proof/MobileProof"
 import { LocaleSwitcher } from "@/components/LocaleSwitcher"
 
 const playlist = [
@@ -255,27 +256,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="px-4 py-10 border-t border-border bg-black">
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            { value: "50",  unit: "ms", id: "attention" },
-            { value: "75",  unit: "%",  id: "trust"     },
-            { value: "53",  unit: "%",  id: "cost"      },
-            { value: "100", unit: "×",  id: "return"    },
-          ].map(b => (
-            <div key={b.id} className="border border-green-500/20 p-4 font-mono"
-              style={{ background: "rgba(0,255,106,0.03)" }}>
-              <div style={{ fontSize: "clamp(28px, 8vw, 42px)", color: "var(--brand)", lineHeight: 1 }}>
-                {b.unit === "×" ? `${b.value}${b.unit}` : `${b.value}${b.unit}`}
-              </div>
-              <div className="text-white/40 text-[10px] uppercase tracking-widest mt-2">
-                {t(`proof.beats.${b.id}.eyebrow`)}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Proof slides */}
+      <MobileProof />
 
       {/* Calculator */}
       <section className="px-4 py-10 border-t border-border bg-black overflow-hidden">
