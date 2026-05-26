@@ -79,6 +79,10 @@ export function ServiceCard({
       data-other-hovered={String(isOtherHovered)}
       onFocus={() => { hoveringRef.current = true;  onHoverChange(cardId); enter() }}
       onBlur={() => { hoveringRef.current = false; onHoverChange(null);   leave() }}
+      onPointerDown={(e)   => { if (e.pointerType === "touch") onHoverChange(cardId) }}
+      onPointerUp={(e)     => { if (e.pointerType === "touch") onHoverChange(null) }}
+      onPointerCancel={(e) => { if (e.pointerType === "touch") onHoverChange(null) }}
+      onPointerLeave={(e)  => { if (e.pointerType === "touch") onHoverChange(null) }}
     >
       {/* Preview */}
       <div className={styles.frames}>
