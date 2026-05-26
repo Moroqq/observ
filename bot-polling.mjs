@@ -1,11 +1,5 @@
 import https from "https"
 import { SocksProxyAgent } from "socks-proxy-agent"
-import { fileURLToPath } from "url"
-import { dirname, join } from "path"
-import dotenv from "dotenv"
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
-dotenv.config({ path: join(__dirname, ".env.local") })
 
 const TOKEN   = process.env.TELEGRAM_BOT_TOKEN
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID
@@ -272,6 +266,21 @@ async function handleMessage(msg) {
   const text     = (msg.text ?? "").trim()
   const username = msg.from?.username
 
+  if (text === "/help") {
+    await tgSend(chatId, [
+      `<b>OBSERV</b>  <code>· digital studio</code>`,
+      `<code>${S}</code>`,
+      ``,
+      `<code>  ›</code> разработка сайтов и приложений`,
+      `<code>  ›</code> брендинг и айдентика`,
+      `<code>  ›</code> motion и графика`,
+      ``,
+      `<code>${S}</code>`,
+      `<code>  /start</code>  — оставить заявку`,
+    ].join("\n"))
+    return
+  }
+
   if (text === "/start") {
     sessions.set(chatId, newSession())
 
@@ -410,5 +419,21 @@ async function poll() {
 }
 
 await tgRequest("deleteWebhook", {})
+
+// Register bot commands (shown in "/" menu)
+await tgRequest("setMyCommands", {
+  commands: [
+    { command: "start",  description: "Инициировать запрос · новая сессия" },
+    { command: "help",   description: "Информация о боте" },
+  ],
+})
+
+// Set persistent menu button (replaces paperclip icon)
+await tgRequest("setChatMenuButton", {
+  menu_button: {
+    type: "commands",
+  },
+})
+
 console.log("[bot] polling · observ")
 while (true) { await poll() }
