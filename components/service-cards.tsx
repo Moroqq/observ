@@ -32,7 +32,7 @@ export function ServiceCard({
 
   const frameUrls = useMemo(() => {
     return Array.from({ length: totalFrames }, (_, i) =>
-      `${framePath}${String(i + 1).padStart(3, "0")}.png`
+      `${framePath}${String(i + 1).padStart(3, "0")}.webp`
     )
   }, [framePath, totalFrames])
 

@@ -210,7 +210,7 @@ export default function Home() {
       <section className="flex flex-col items-center justify-center pt-12 pb-8 px-6 bg-black">
         <div style={{ width: "75vw", maxWidth: 300, aspectRatio: "1 / 1", position: "relative" }}>
           <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: showFrames ? 1 : 0, transition: "opacity 0.4s ease", pointerEvents: "none" }}>
-            <FrameSequence totalFrames={407} framePath="/frames/observ-logo_frame_" frameExtension="png" isPlaying={showFrames} loop={true} style={{ width: "100%", height: "auto", display: "block" }} />
+            <FrameSequence totalFrames={407} framePath="/frames/observ-logo_frame_" frameExtension="webp" isPlaying={showFrames} loop={true} style={{ width: "100%", height: "auto", display: "block" }} />
           </div>
           <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: showFrames ? 0 : 1, transition: "opacity 0.4s ease" }}>
             <AsciiLogo onHidden={() => setShowFrames(true)} fontSize={15} />
@@ -331,7 +331,7 @@ export default function Home() {
                 <FrameSequence
                   totalFrames={407}
                   framePath="/frames/observ-logo_frame_"
-                  frameExtension="png"
+                  frameExtension="webp"
                   isPlaying={showFrames}
                   loop={true}
                   scrollControlled={false}

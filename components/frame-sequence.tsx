@@ -17,7 +17,7 @@ interface FrameSequenceProps {
 export function FrameSequence({
   totalFrames,
   framePath,
-  frameExtension = "png",
+  frameExtension = "webp",
   className = "",
   style,
   isPlaying = false,
