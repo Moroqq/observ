@@ -1,0 +1,72 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 1;
+  transition: opacity 0.68s ease;
+}
+
+.fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.terminal {
+  font-family: var(--font-mono, 'Courier New', monospace);
+  font-size: clamp(11px, 1.05vw, 14px);
+  line-height: 1.75;
+  overflow: hidden;
+}
+
+.line {
+  margin: 0;
+  color: rgba(0, 255, 106, 0.85);
+  white-space: pre;
+}
+
+.prompt {
+  color: rgba(0, 255, 106, 0.4);
+}
+
+.dots {
+  color: rgba(0, 255, 106, 0.35);
+}
+
+.ok {
+  color: rgba(0, 255, 106, 0.55);
+}
+
+.ascii {
+  margin: 1rem 0 0.65rem;
+  color: rgba(0, 255, 106, 0.65);
+  font-size: clamp(5px, 0.44vw, 7px);
+  line-height: 1.18;
+  white-space: pre;
+  letter-spacing: 0;
+  overflow: hidden;
+}
+
+.bar {
+  color: #00ff6a;
+  letter-spacing: 0.02em;
+}
+
+.pct {
+  color: rgba(0, 255, 106, 0.65);
+  min-width: 4ch;
+  display: inline-block;
+}
+
+.ready {
+  color: rgba(0, 255, 106, 1);
+  margin-top: 0.15rem;
+}
+
+.check {
+  color: #00ff6a;
+}

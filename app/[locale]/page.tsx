@@ -15,6 +15,7 @@ import { EstimateModule } from "@/components/EstimateModule"
 import { Proof } from "@/components/Proof/Proof"
 import { MobileProof } from "@/components/Proof/MobileProof"
 import { LocaleSwitcher } from "@/components/LocaleSwitcher"
+import { Preloader } from "@/components/preloader"
 
 const playlist = [
   "/audio/track1.mp3",
@@ -55,6 +56,7 @@ export default function Home() {
   const [a2Height,     setA2Height]     = useState(0)
   const [hoveredCard,  setHoveredCard]  = useState<string | null>(null)
   const [isMobile,     setIsMobile]     = useState(false)
+  const [preloaderDone, setPreloaderDone] = useState(false)
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const rowRef   = useRef<HTMLDivElement>(null)
@@ -202,9 +204,11 @@ export default function Home() {
 
   // ── Mobile layout ────────────────────────────────────────────────────────────
   if (isMobile) return (
-    <main className="bg-black text-foreground flex flex-col overflow-x-hidden w-full">
-      <audio ref={audioRef} src={playlist[currentTrack]} onEnded={playNext} />
-      {header}
+    <>
+      {!preloaderDone && <Preloader onComplete={() => setPreloaderDone(true)} />}
+      <main className="bg-black text-foreground flex flex-col overflow-x-hidden w-full">
+        <audio ref={audioRef} src={playlist[currentTrack]} onEnded={playNext} />
+        {header}
 
       {/* Logo */}
       <section className="flex flex-col items-center justify-center pt-12 pb-8 px-6 bg-black">
@@ -265,12 +269,15 @@ export default function Home() {
       </section>
 
       <GlitchOverlay />
-    </main>
+      </main>
+    </>
   )
 
   // ── Desktop layout ───────────────────────────────────────────────────────────
   return (
-    <main className="bg-background text-foreground flex flex-col" style={{ minHeight: "max(700vh, 9000px)" }}>
+    <>
+      {!preloaderDone && <Preloader onComplete={() => setPreloaderDone(true)} />}
+      <main className="bg-background text-foreground flex flex-col" style={{ minHeight: "max(700vh, 9000px)" }}>
       <audio ref={audioRef} src={playlist[currentTrack]} onEnded={playNext} />
 
       {/* ── Sticky header ─────────────────────────────────────────────── */}
@@ -472,5 +479,6 @@ export default function Home() {
 
       <div className="flex-1 bg-black" />
     </main>
+    </>
   )
 }
