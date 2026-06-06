@@ -24,9 +24,9 @@ export const SERVICES: Service[] = [
   { id: "video",        category: "branding",    label: "видео",                basePrice:      0, pricePrefix: "",   priceMode: "quote", baseWeeks: [2, 4]  },
 ]
 
-export const BUDGET_MIN  = 5_000
+export const BUDGET_MIN  = 50_000
 export const BUDGET_MAX  = 500_000
-export const BUDGET_STEP = 1_000
+export const BUDGET_STEP = 5_000
 
 export function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price) + " ₽"

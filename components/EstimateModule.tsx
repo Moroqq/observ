@@ -11,18 +11,16 @@ import {
 import {
   SERVICES,
   BUDGET_MIN, BUDGET_MAX, BUDGET_STEP,
-  formatPrice, formatServicePrice,
-  type Service,
+  formatPrice,
 } from "@/lib/pricing"
 import { computeEstimate } from "@/lib/estimate"
 
 // ── BudgetSlider ─────────────────────────────────────────────────────────────
 const TICKS = [
-  { val:     5_000, label: "5к"   },
-  { val:   100_000, label: "100к" },
-  { val:   500_000, label: "500к" },
-  { val: 1_000_000, label: "1млн" },
-  { val: 2_000_000, label: "2млн" },
+  { val:  50_000, label: "50к"  },
+  { val: 150_000, label: "150к" },
+  { val: 300_000, label: "300к" },
+  { val: 500_000, label: "500к" },
 ]
 
 function BudgetSlider({ value, onChange }: { value: number; onChange: (v: number) => void }) {
@@ -87,29 +85,23 @@ function BudgetSlider({ value, onChange }: { value: number; onChange: (v: number
 
 // ── ServiceCard ──────────────────────────────────────────────────────────────
 function ServiceCard({
-  service,
   label,
   isSelected,
   onToggle,
 }: {
-  service: Service
   label: string
   isSelected: boolean
   onToggle: () => void
 }) {
-  const isQuote = service.priceMode === "quote"
-  const priceStr = formatServicePrice(service)
-
   return (
     <button
       type="button"
       role="checkbox"
       aria-checked={isSelected}
       onClick={onToggle}
-      className="text-left font-mono transition-all duration-200 flex flex-col gap-1.5"
+      className="text-left font-mono transition-all duration-200 flex items-center gap-1.5"
       style={{
-        padding: "9px 12px",
-        minHeight: 58,
+        padding: "10px 12px",
         border: `1.5px solid ${isSelected ? "rgba(0,255,106,1)" : "rgba(0,255,106,0.30)"}`,
         background: isSelected ? "rgba(0,255,106,0.08)" : "rgba(0,255,106,0.02)",
         boxShadow: isSelected
@@ -117,26 +109,8 @@ function ServiceCard({
           : "none",
       }}
     >
-      <div className="flex items-center gap-1.5">
-        <span className="text-green-500/70 text-[11px] shrink-0">{isSelected ? "(●)" : "( )"}</span>
-        <span className="text-[rgba(255,255,255,0.92)] text-[13px] leading-tight">{label}</span>
-      </div>
-
-      <div
-        className="tabular-nums"
-        style={{
-          fontSize: isQuote ? "11px" : "clamp(13px, 1.2vw, 17px)",
-          color: isQuote
-            ? "rgba(255,255,255,0.22)"
-            : isSelected
-            ? "var(--brand)"
-            : "rgba(255,255,255,0.38)",
-          transition: "color 150ms ease",
-          letterSpacing: isQuote ? "0.05em" : undefined,
-        }}
-      >
-        {isQuote ? "— по запросу" : priceStr}
-      </div>
+      <span className="text-green-500/70 text-[11px] shrink-0">{isSelected ? "(●)" : "( )"}</span>
+      <span className="text-[rgba(255,255,255,0.92)] text-[13px] leading-tight">{label}</span>
     </button>
   )
 }
@@ -272,7 +246,7 @@ export function EstimateModule({ locale = "ru" }: { locale?: "ru" | "en" }) {
               {devServices.map(s => (
                 <ServiceCard
                   key={s.id}
-                  service={s}
+
                   label={t(`estimate.service_${s.id}`)}
                   isSelected={selectedIds.includes(s.id)}
                   onToggle={() => toggleService(s.id)}
@@ -293,7 +267,7 @@ export function EstimateModule({ locale = "ru" }: { locale?: "ru" | "en" }) {
               {brandServices.map(s => (
                 <ServiceCard
                   key={s.id}
-                  service={s}
+
                   label={t(`estimate.service_${s.id}`)}
                   isSelected={selectedIds.includes(s.id)}
                   onToggle={() => toggleService(s.id)}
