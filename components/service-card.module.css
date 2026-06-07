@@ -23,8 +23,7 @@
   isolation: isolate;
 }
 
-/* ── Hovered card ─────────────────────────────────────────────────────────── */
-.card:hover,
+/* ── Active card (press-triggered) ─────────────────────────────────────────── */
 .card[data-hovered="true"] {
   transform: scale(1.04);
   z-index: 10;

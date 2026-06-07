@@ -118,7 +118,7 @@ export default function Home() {
       { id: "A2", ref: a2Ref },
       { id: "A3", ref: a3Ref },
     ] as const
-    const onMove = (e: PointerEvent) => {
+    const onDown = (e: PointerEvent) => {
       let found: string | null = null
       for (const { id, ref } of refs) {
         const el = ref.current
@@ -132,11 +132,9 @@ export default function Home() {
       }
       setHoveredCard(found)
     }
-    window.addEventListener("pointermove", onMove)
-    window.addEventListener("pointerleave", () => setHoveredCard(null))
+    window.addEventListener("pointerdown", onDown)
     return () => {
-      window.removeEventListener("pointermove", onMove)
-      window.removeEventListener("pointerleave", () => setHoveredCard(null))
+      window.removeEventListener("pointerdown", onDown)
     }
   }, [])
 

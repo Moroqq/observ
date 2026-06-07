@@ -1,11 +1,14 @@
 import https from "https"
 import { SocksProxyAgent } from "socks-proxy-agent"
+import { HttpsProxyAgent } from "https-proxy-agent"
 
 const TG_HOST = "api.telegram.org"
 
 function getAgent(): https.Agent | undefined {
-  if (process.env.SOCKS_PROXY) return new SocksProxyAgent(process.env.SOCKS_PROXY)
-  return undefined
+  const url = process.env.PROXY_URL ?? process.env.SOCKS_PROXY
+  if (!url) return undefined
+  if (url.startsWith("socks")) return new SocksProxyAgent(url)
+  return new HttpsProxyAgent(url) as unknown as https.Agent
 }
 
 function tgRequest(path: string, data: object): Promise<any> {
