@@ -308,32 +308,9 @@ export function EstimateModule({ locale = "ru" }: { locale?: "ru" | "en" }) {
           {/* 5 — Summary + CTA */}
           <div className="space-y-4">
 
-            {/* Estimate totals — only when services selected */}
+            {/* Timeline — only when services selected, price intentionally hidden */}
             {estimate && (
               <div className="flex flex-wrap gap-4 sm:gap-8">
-                {estimate.total > 0 && (
-                  <div>
-                    <p className="text-white/35 text-[10px] uppercase tracking-widest mb-0.5">
-                      {t("calculator.totalLabel")}
-                    </p>
-                    <p className="text-green-400 tabular-nums" style={{ fontSize: "clamp(16px, 1.8vw, 22px)" }}>
-                      {formatPrice(estimate.total)}
-                      {estimate.hasQuotes && (
-                        <span className="text-white/30 text-[11px] ml-2">+ уточн. у менеджера</span>
-                      )}
-                    </p>
-                  </div>
-                )}
-
-                {estimate.total === 0 && estimate.hasQuotes && (
-                  <div>
-                    <p className="text-white/35 text-[10px] uppercase tracking-widest mb-0.5">
-                      {t("calculator.totalLabel")}
-                    </p>
-                    <p className="text-white/50 text-[13px]">уточняется у менеджера</p>
-                  </div>
-                )}
-
                 <div>
                   <p className="text-white/35 text-[10px] uppercase tracking-widest mb-0.5">
                     {t("calculator.termLabel")}
@@ -341,6 +318,12 @@ export function EstimateModule({ locale = "ru" }: { locale?: "ru" | "en" }) {
                   <p className="text-white/70 tabular-nums" style={{ fontSize: "clamp(16px, 1.8vw, 22px)" }}>
                     ~{estimate.weeks[0]}–{estimate.weeks[1]} {t("calculator.weeksShort")}
                   </p>
+                </div>
+                <div>
+                  <p className="text-white/35 text-[10px] uppercase tracking-widest mb-0.5">
+                    {t("calculator.totalLabel")}
+                  </p>
+                  <p className="text-white/50 text-[13px]">уточняется у менеджера</p>
                 </div>
               </div>
             )}
