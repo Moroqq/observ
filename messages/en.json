@@ -26,6 +26,16 @@
     "subtitle": "research data we base our work on",
     "live_indicator": "● live · benchmarks updated 2024"
   },
+  "products": {
+    "section_label": "PRODUCTS",
+    "title": "We don't only build to order — we build our own",
+    "items": {
+      "kairo": {
+        "name": "Kairo",
+        "tagline": "A terminal for managing tasks. Desktop and Android, synced across devices."
+      }
+    }
+  },
   "estimate": {
     "section_label": "ESTIMATE.MODULE",
     "title": "estimate your project",

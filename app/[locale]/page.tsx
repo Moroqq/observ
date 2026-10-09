@@ -7,6 +7,7 @@ import { MiniPlayer } from "@/components/mini-player"
 import { SocialLinks } from "@/components/social-links"
 import { AsciiLogo } from "@/components/ascii-logo"
 import { RevealText } from "@/components/reveal-text"
+import { ProductsShowcase } from "@/components/products-showcase"
 import { FrameSequence } from "@/components/frame-sequence"
 import { ServiceCard } from "@/components/service-cards"
 import { GlitchOverlay } from "@/components/glitch-overlay"
@@ -36,7 +37,8 @@ const P4_S  = 2100, P4_E  = 2800
 const P5_S  = 3200, P5_E  = 3800   // manifesto out, proof in
 const PROOF_BEAT_S = 3800           // beat 1 starts
 const PROOF_BEAT_E = 6600           // beat 4 ends (4 × 700 px)
-const P6_S  = 6600, P6_E  = 7400   // proof out, calculator in
+const P6_S  = 6600, P6_E  = 7400   // proof out, products in
+const P7_S  = 7800, P7_E  = 8600   // products out, calculator in
 
 const SAFETY_GAP = 80
 
@@ -155,7 +157,9 @@ export default function Home() {
   const proofIn    = prog(scrollY, P5_S + 200, P5_E)
   const proofOut   = prog(scrollY, P6_S,  P6_S + 400)
   const proofBeat  = prog(scrollY, PROOF_BEAT_S, PROOF_BEAT_E)
-  const calcIn     = prog(scrollY, P6_S + 200, P6_E)
+  const productsIn  = prog(scrollY, P6_S + 200, P6_E)
+  const productsOut = prog(scrollY, P7_S, P7_S + 400)
+  const calcIn      = prog(scrollY, P7_S + 200, P7_E)
 
   const syslogSection =
     scrollY < 100        ? "hero" :
@@ -165,6 +169,7 @@ export default function Home() {
     scrollY < P5_S       ? "manifesto" :
     scrollY < PROOF_BEAT_E ? "proof" :
     scrollY < P6_S       ? "proof:return" :
+    scrollY < P7_S       ? "products" :
                            "calculator"
 
   const eioS      = (t2: number) => -(Math.cos(Math.PI * t2) - 1) / 2
@@ -261,6 +266,11 @@ export default function Home() {
       {/* Proof slides */}
       <MobileProof />
 
+      {/* Products */}
+      <section className="px-4 py-12 border-t border-border bg-black">
+        <ProductsShowcase compact />
+      </section>
+
       {/* Calculator */}
       <section className="px-4 py-10 border-t border-border bg-black overflow-hidden">
         <EstimateModule locale={locale as "ru" | "en"} />
@@ -275,7 +285,7 @@ export default function Home() {
   return (
     <>
       {!preloaderDone && <Preloader onComplete={() => setPreloaderDone(true)} />}
-      <main className="bg-background text-foreground flex flex-col" style={{ minHeight: "max(700vh, 9000px)" }}>
+      <main className="bg-background text-foreground flex flex-col" style={{ minHeight: "max(800vh, 10400px)" }}>
       <audio ref={audioRef} src={playlist[currentTrack]} onEnded={playNext} />
 
       {/* ── Sticky header ─────────────────────────────────────────────── */}
@@ -455,6 +465,20 @@ export default function Home() {
           }}
         >
           <Proof progress={proofBeat} />
+        </div>
+
+        {/* Products */}
+        <div
+          style={{
+            position: "absolute", top: "50%", left: "50%",
+            transform: "translate(-50%, -50%)",
+            opacity: productsIn * (1 - productsOut),
+            zIndex: 7,
+            pointerEvents: productsIn > 0.5 && productsOut < 0.5 ? "auto" : "none",
+            width: "min(1200px, 92vw)",
+          }}
+        >
+          <ProductsShowcase />
         </div>
 
         {/* Calculator */}
