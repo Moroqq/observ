@@ -441,7 +441,7 @@ export default function Home() {
         <div className="absolute bottom-6 left-6 pointer-events-none" style={{ opacity: revealOpacity }}>
           <RevealText
             text={t("hero.reveal_text")}
-            className="text-gray-500 text-xs sm:text-sm text-left max-w-xs font-medium"
+            className="text-gray-500 text-xs sm:text-sm text-left max-w-xs font-medium pointer-events-auto"
           />
         </div>
 
