@@ -90,6 +90,11 @@ const SECTION_LOGS: Record<string, string[]> = {
     "benchmarks.verified OK",
     "data.sources: stanford, google, forrester",
   ],
+  products: [
+    "registry.products mounted",
+    "kairo.release channel: stable",
+    "self.hosted OK",
+  ],
   calculator: [
     "estimate.engine online",
     "pricing.matrix v2.1 loaded",
